@@ -103,9 +103,9 @@ class User
             ],
             [
                 'id' => 5,
-                'name' => 'Tryer Student User',
-                'login' => 'TSU',
-                'password' => 'student',
+                'name' => 'Student Student Student',
+                'login' => 'student',
+                'password' => '$2y$10$.4J2CJ.GR1.wCS3N3PA4i.I6lfUh6JA15Au9ZRHnJpHwpC62YYoYe',
                 'role' => $user,
             ],
         ];
