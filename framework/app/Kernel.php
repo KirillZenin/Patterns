@@ -28,25 +28,28 @@ class Kernel
      */
     protected $containerBuilder;
 
-    public function __construct(ContainerBuilder $containerBuilder)
+    /**
+     * @param array
+     */
+    protected $params;
+
+    public final function __construct(ContainerBuilder $containerBuilder)
     {
-        $this->containerBuilder = $containerBuilder;
+        $this->params = [
+            'dir' => __DIR__,
+            'containerBuilder' => $containerBuilder,
+        ];  
     }
 
     /**
      * @param Request $request
      * @return Response
      */
-    public function handle(Request $request): Response
+    public final function handle(Request $request): Response
     {
-        $configs = new \Framework\RegisterConfigs(new \Framework\ReceiverRegisterConfigs($this->containerBuilder));
-        $configs->execute();
-        $this->containerBuilder = $configs->containerBuilder;
-        $routes = new \Framework\RegisterRoutes(new \Framework\ReceiverRegisterRoutes($this->containerBuilder));//,$this->routeCollection));
-        $routes->execute();
-        $this->routeCollection = $routes->routeCollection;
-        $process = new \Framework\Process($request, new \Framework\ReceiverProcess($this->routeCollection));
-        $process->execute();
-        return $process->Response;
+        $this->registerConfigs();
+        $this->registerRoutes();
+
+        return $this->process($request);
     }
 }
