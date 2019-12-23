@@ -21,8 +21,13 @@ class Product
         }
 
         $productList = [];
+        $product = new Entity\Product(0, '', 0, '');
         foreach ($this->getDataFromSource(['id' => $ids]) as $item) {
-            $productList[] = new Entity\Product($item['id'], $item['name'], $item['price'],$item['desc']);
+            $product->setId($item['id']);
+            $product->setPrice($item['price']);
+            $product->setName($item['name']);
+            $product->setDescription($item['description']);
+            $productList[] = clone $product;
         }
 
         return $productList;
@@ -36,8 +41,13 @@ class Product
     public function fetchAll(): array
     {
         $productList = [];
+        $product = new Entity\Product(0, '', 0, '');
         foreach ($this->getDataFromSource() as $item) {
-            $productList[] = new Entity\Product($item['id'], $item['name'], $item['price'],$item['desc']);
+            $product->setId($item['id']);
+            $product->setPrice($item['price']);
+            $product->setName($item['name']);
+            $product->setDescription($item['description']);
+            $productList[] = clone $product;
         }
 
         return $productList;
@@ -57,62 +67,62 @@ class Product
                 'id' => 1,
                 'name' => 'PHP',
                 'price' => 15300,
-                'desc' => 'Описание',
+                'description' => 'Cкриптовый язык общего назначения, интенсивно применяемый для разработки веб-приложений',
             ],
             [
                 'id' => 2,
                 'name' => 'Python',
                 'price' => 20400,
-                'desc' => 'Описание',
+                'description' => 'Высокоуровневый язык программирования общего назначения, ориентированный на улучшение  производительности разработчика и читаемости кода'
             ],
             [
                 'id' => 3,
                 'name' => 'C#',
                 'price' => 30100,
-                'desc' => 'Описание',
+                'description' => 'Результат объединения С++, Java и Delphi c элементами функционального программирования.'
             ],
             [
                 'id' => 4,
                 'name' => 'Java',
                 'price' => 30600,
-                'desc' => 'Описание',
+                'description' => 'JAVA'
             ],
             [
                 'id' => 5,
                 'name' => 'Ruby',
                 'price' => 18600,
-                'desc' => 'Описание',
+                'description' => 'Python с некоторыми обвесами'
             ],
             [
                 'id' => 8,
                 'name' => 'Delphi',
                 'price' => 8400,
-                'desc' => 'Описание',
+                'description' => "Суть - Pascal с классами, ыл очень популярен из-за возможности создания оконных десктоп-приложений "
             ],
             [
                 'id' => 9,
                 'name' => 'C++',
                 'price' => 19300,
-                'desc' => 'Описание',
+                'description' => "Один из самых известных языков, много IDE, много где используется "
             ],
             [
                 'id' => 10,
                 'name' => 'C',
                 'price' => 12800,
-                'desc' => 'Описание',
+                'description' => "язык программирования, разработанный придуманный по приколу в пиндосской компании Bell Labs в начале 1970-х годов Деннисом Ритчи. "
             ],
             [
                 'id' => 11,
                 'name' => 'Lua',
                 'price' => 5000,
-                'desc' => 'Описание',
+                'description' => " скриптовый язык, напоминающий C. Используется в некоторых играх (wow, например) и эмуляторах для реализации ИИ и пр. хрени. Грядет на замену убогим шаблонам MediaWiki, в Википедиях уже доступен."
             ],
             [
                 'id' => 12,
                 'name' => 'Rust',
-                'price' => 50000,
-                'desc' => 'Це RUST',
-            ],
+                'price' => 12000,
+                'description' => "всё, хватит. Кто в 16 лет не мечтал запилить свой язык программирования, который наконец-то позволит писать всё и сразу, у того нет сердца."
+            ]
         ];
 
         if (!count($search)) {

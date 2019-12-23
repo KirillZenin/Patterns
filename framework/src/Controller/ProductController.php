@@ -5,10 +5,14 @@ declare(strict_types = 1);
 namespace Controller;
 
 use Framework\Render;
+use Service\Discount\DiscountCalculate;
 use Service\Order\Basket;
 use Service\Product\Product;
+use Service\Product\SortName;
+use Service\Product\SortPrice;
 use Service\SocialNetwork\ISocialNetwork;
 use Service\SocialNetwork\SocialNetwork;
+use Service\User\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -37,6 +41,10 @@ class ProductController
             return $this->render('error404.html.php');
         }
 
+        $user = (new Security($request->getSession()));
+        if ($user->isLogged()) {
+            $productInfo = (new DiscountCalculate($user->getUser()->getDiscount()))->calculate($productInfo);
+        }
         $isInBasket = $basket->isProductInBasket($productInfo->getId());
 
         return $this->render('product/info.html.php', ['productInfo' => $productInfo, 'isInBasket' => $isInBasket]);
@@ -51,8 +59,19 @@ class ProductController
      */
     public function listAction(Request $request): Response
     {
-        $productList = (new Product())->getAll($request->query->get('sort', ''));
+        $user = (new Security($request->getSession()));
+        $sort = $request->query->get('sort', '');
+        if ($sort === 'price') {
+            $productList = (new Product())->getAll(new SortPrice());
+        } elseif ($sort === 'name') {
+            $productList = (new Product())->getAll(new SortName());
+        } else {
+            $productList = (new Product())->getAll();
+        }
 
+        if ($user->isLogged()) {
+            $productList = (new DiscountCalculate($user->getUser()->getDiscount()))->calculateAll($productList);
+        }
         return $this->render('product/list.html.php', ['productList' => $productList]);
     }
 
